@@ -1,0 +1,14 @@
+version: "3.3"
+
+services:
+  webdav:
+    image: webdav:yz
+    restart: always
+    # volumes:
+    #   - /path/to/data:/data
+    environment:
+      - USER=admin
+      - PASSWD=admin
+    ports:
+      - 443:443
+    container_name: webdav
