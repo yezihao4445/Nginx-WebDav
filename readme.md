@@ -15,7 +15,7 @@ docker-compose up -d
 │   ├── build.yml
 │   ├── nginx.conf  nginx配置文件
 │   └── src  镜像内部资源
-│       ├── cert  开启https所需证书
+│       ├── cert  开启https所需证书，容器中路径为 /usr/local/nginx/conf/cert
 │       ├── nginx-1.18.0 nginx源码
 │       ├── nginx-dav-ext-module nginx WebDav 模块源码
 │       └── run.sh 镜像运行脚本
@@ -39,6 +39,7 @@ services:
     restart: always
     volumes:
       - /path/to/data:/data   #存储文件挂载
+      # - /path/to/cert:/usr/local/nginx/conf/cert # nginx开启TLS验证
     environment:
       - USER=admin       # 账户
       - PASSWD=admin     # 密码
@@ -55,5 +56,5 @@ docker-compose up -d
 ---
 ## PS
 
-* nginx下的webdav有一些功能尚未实现，尤其是在windows设备的挂载需要通过修改源码的方式去实现。希望拥有完整功能最好使用 Apache
-* 本次测试通过MAC上的FE File Explorer 验证无误，其余工具请自行验证
+* Windows11 下测试挂载成功(http\https皆可。https要求证书配置(Common Name)必须严格对应才可挂载)
+* MAC 下测试通过 FE File Explorer ，其余工具请自行验证
