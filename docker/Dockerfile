@@ -5,7 +5,11 @@ COPY src /opt/src
 RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories && \
     apk update && apk add --no-cache gcc g++ make pcre pcre-dev zlib zlib-dev libxslt libxslt-dev openssl-dev && \
     cd /opt/src/nginx-1.18.0 && \
-    ./configure --prefix=/usr/local/nginx --with-http_dav_module --add-module=/opt/src/nginx-dav-ext-module --with-http_ssl_module && \
+    ./configure --prefix=/usr/local/nginx \
+    --with-http_dav_module \
+    --add-module=/opt/src/nginx-dav-ext-module \
+    --add-module=/opt/src/headers-more-nginx-module \
+    --with-http_ssl_module && \
     make
 
 FROM alpine:latest
@@ -25,5 +29,7 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositorie
     ln -sv /usr/local/nginx/sbin/nginx   /usr/local/bin/nginx
 
 COPY nginx.conf /usr/local/nginx/conf/nginx.conf
+
+WORKDIR /usr/local/nginx/conf
 
 CMD ["/bin/sh", "-c", "/opt/src/run.sh && tail -f /var/log/webdav.log"]
